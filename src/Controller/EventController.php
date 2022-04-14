@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Repository\EventRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,9 +21,7 @@ class EventController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->json([
-            'events' => $this->eventRepository->findAll(),
-        ]);
+        return $this->json($this->serialize($this->eventRepository->findAll()));
     }
 
     /**
@@ -30,9 +29,7 @@ class EventController extends AbstractController
      */
     public function lastEvents(): Response
     {
-        return $this->json([
-            'events' => $this->eventRepository->findLastEvents(),
-        ]);
+        return $this->json($this->serialize($this->eventRepository->findLastEvents()));
     }
 
     /**
@@ -41,16 +38,17 @@ class EventController extends AbstractController
     public function show(int $id): Response
     {
         return $this->json([
-            'event' => $this->eventRepository->find($id),
+            'event' => $this->eventRepository->find($id)->jsonSerialize(),
         ]);
     }
 
     /**
      * @Route("/event/add", name="app_event_add", methods={"POST"})
      */
-    public function add(array $data): Response
+    public function add(Request $request): Response
     {
         try {
+            $data = $request->request->all();
             $event = $this->hydrate(new Event(), $data);
             $this->eventRepository->add($event);
 
@@ -69,7 +67,7 @@ class EventController extends AbstractController
     /**
      * @Route("/event/{id}/update", name="app_event_update", methods={"POST"})
      */
-    public function update(array $data, int $id): Response
+    public function update(int $id, Request $request): Response
     {
         $event = $this->eventRepository->find($id);
 
@@ -81,6 +79,7 @@ class EventController extends AbstractController
         }
 
         try {
+            $data = $request->request->all();
             $event = $this->hydrate($event, $data);
             $this->eventRepository->add($event);
 
@@ -115,6 +114,16 @@ class EventController extends AbstractController
         return $this->json([
             'status' => 'success',
         ]);
+    }
+
+    private function serialize(array $events): array
+    {
+        $data = [];
+        foreach ($events as $event) {
+            $data[] = $event->jsonSerialize();
+        }
+
+        return $data;
     }
 
     private function hydrate(Event $event, array $data): Event
