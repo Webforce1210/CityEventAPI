@@ -241,4 +241,9 @@ class Event
 
         return $this;
     }
+
+    public function jsonSerialize()
+    {
+        return (object) get_object_vars($this);
+    }   
 }
