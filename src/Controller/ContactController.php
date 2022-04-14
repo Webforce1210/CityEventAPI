@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
-
+use App\Entity\Contact;
 use App\Repository\ContactRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,15 +21,12 @@ class ContactController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->json([
-            'contacts'=>$this->contactRepository->findAll()
-        ]);
+        return $this->json($this->serialize($this->contactRepository->findAll()));
     }
 
         /**
      * @Route("/contact/{id}", name="app_contact_show", methods={"GET"})
      */
-
     public function show(int $id):Response{
         return $this->json([
             'contact'=>$this->contactRepository->find($id)
@@ -39,23 +37,14 @@ class ContactController extends AbstractController
      * @Route("/contact/add", name="app_contact_add", methods={"POST"})
      */
 
-    // public function add(array $data):Response{
+    private function serialize(array $contacts): array
+    {
+        $data = [];
+        foreach ($contacts as $contact) {
+            $data[] = $contact->jsonSerialize();
+        }
 
-    //     try{
-    //         $contact =$this->integration(new Contact(),$data);
-    //         $this->contactRepository->add($contact);
-    //         return $this->json([
-    //             'status'=>'success',
-    //             'id'=>$contact->getId(),
-    //         ]);
-    //     }catch (\Exception $th){
-    //         return $this->json([
-    //             'status'=>'error',
-    //             'id'=>$th->getMessage(),
-    //         ]);
-    //     }
-    // }
-
-
+        return $data;
+    }
 }
 //postman
