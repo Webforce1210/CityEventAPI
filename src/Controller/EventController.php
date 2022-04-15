@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Repository\EventRepository;
+use App\Service\Hydrator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,9 +38,16 @@ class EventController extends AbstractController
      */
     public function show(int $id): Response
     {
-        return $this->json([
-            'event' => $this->eventRepository->find($id)->jsonSerialize(),
-        ]);
+        $event = $this->eventRepository->find($id);
+
+        if (null === $event) {
+            return $this->json([
+                'status' => 'error',
+                'message' => 'Event not found',
+            ], 404);
+        }
+
+        return $this->json($event->jsonSerialize());
     }
 
     /**
@@ -128,19 +136,6 @@ class EventController extends AbstractController
 
     private function hydrate(Event $event, array $data): Event
     {
-        $event
-            ->setTitle($data['title'])
-            ->setAdresse($data['adresse'])
-            ->setBudget($data['budget'])
-            ->setDateDebut($data['date_debut'])
-            ->setDateFin($data['date_fin'])
-            ->setHeureDebut($data['heure_debut'])
-            ->setHeureFin($data['heure_fin'])
-            ->setTypeActivite($data['type_activite'])
-            ->setNbParticipantMax($data['nb_participant_max'])
-            ->setDescription($data['description'])
-        ;
-
-        return $event;
+        return Hydrator::hydrate($data, $event);
     }
 }

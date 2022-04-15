@@ -14,3 +14,6 @@
 ## installer les dépendances
 * composer install
 
+## base de donnée de test
+* php bin/console doctrine:database:create --env=test
+* php bin/console d:m:m --env=test
