@@ -25,11 +25,21 @@ class MessagePriveController extends AbstractController
     }
 
         /**
-     * @Route("/messagepv/{id}", name="app_messageprive_show", methods={"POST"})
+     * @Route("/messagepv-{id}", name="app_messageprive_show", methods={"GET"})
+     */
+    public function  show(int $id):Response{
+        return $this->json([
+            'messagepv'=>$this->messagePriveRepository->find($id)->jsonSerialize()
+        ]);
+        
+    }
+
+        /**
+     * @Route("/messagepv/add", name="app_messageprive_add", methods={"POST"})
      */
     public function add(Request $request):Response{
         try{
-            $data=$request->$request->all();
+            $data=$request->request->all();
             $messagePrive=$this->hydrate(new MessagePrive(),$data);
             $this->messagePriveRepository->add($messagePrive);
 
@@ -41,7 +51,7 @@ class MessagePriveController extends AbstractController
             return $this->json([
                 'status'=>'error',
                 'message'=>$th->getMessage(),
-            ]);
+            ],500);
         }
     }
 

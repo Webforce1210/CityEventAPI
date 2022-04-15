@@ -95,6 +95,9 @@
     "psr/log": {
         "version": "3.0.0"
     },
+    "symfony-bundles/json-request-bundle": {
+        "version": "4.1.1"
+    },
     "symfony/cache": {
         "version": "v6.0.6"
     },
@@ -188,9 +191,6 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
-    },
-    "symfony/orm-pack": {
-        "version": "v2.2.0"
     },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.25.0"
