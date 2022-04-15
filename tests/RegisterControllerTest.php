@@ -8,14 +8,16 @@ class RegisterControllerTest extends WebTestCase
 {
     public function testRegistraterSuccess()
     {
-        $client = static::createClient();
-        $client->request('POST', '/register', [
+        $data = [
             'pseudo' => 'Lorem',
             'email' => 'lorem@gmail.com',
             'password' => 'password23',
             'region' => 'iledefrance',
             'hobbies' => ['sport', 'cinéma'],
-        ]);
+        ];
+
+        $client = static::createClient();
+        $client->request('POST', '/register', [], [], [], json_encode($data));
 
         $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('success', $client->getResponse()->getContent());
@@ -23,11 +25,13 @@ class RegisterControllerTest extends WebTestCase
 
     public function testRegistraterFail()
     {
-        $client = static::createClient();
-        $client->request('POST', '/register', [
+        $data = [
             'email' => 'lorem@gmail.com',
             'password' => '',
-        ]);
+        ];
+
+        $client = static::createClient();
+        $client->request('POST', '/register', [], [], [], json_encode($data));
 
         $this->assertStringContainsString('error', $client->getResponse()->getContent());
     }

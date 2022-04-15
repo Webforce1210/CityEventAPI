@@ -31,10 +31,10 @@ class LoginController extends AbstractController
             ]);
         }
 
-        $password = $request->request->get('password');
-        $user = $userRepository->findOneBy(['email' => $request->request->get('email')]);
+        $data = json_decode($request->getContent());
+        $user = $userRepository->findOneBy(['email' => $data->email]);
 
-        if (null !== $user && $passwordHasher->isPasswordValid($user, $password)) {
+        if (null !== $user && $passwordHasher->isPasswordValid($user, $data->password)) {
             $session->set('_security_main', serialize($user));
 
             return $this->json([

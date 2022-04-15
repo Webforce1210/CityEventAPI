@@ -31,7 +31,7 @@ class RegisterController extends AbstractController
         }
 
         try {
-            $user = $this->createUser($request->request->all());
+            $user = $this->createUser(json_decode($request->getContent(), true));
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
