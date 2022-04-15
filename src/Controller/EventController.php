@@ -72,7 +72,7 @@ class EventController extends AbstractController
     public function add(Request $request): Response
     {
         try {
-            $data = $request->request->all();
+            $data = json_decode($request->getContent(), true);
             $event = $this->hydrate(new Event(), $data);
             $this->eventRepository->add($event);
 
@@ -103,7 +103,7 @@ class EventController extends AbstractController
         }
 
         try {
-            $data = $request->request->all();
+            $data = json_decode($request->getContent(), true);
             $event = $this->hydrate($event, $data);
             $this->eventRepository->add($event);
 

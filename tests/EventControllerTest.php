@@ -40,8 +40,7 @@ class EventControllerTest extends WebTestCase
 
     public function testAdd(): void
     {
-        $client = static::createClient();
-        $client->request('POST', '/event/add', [
+        $data = [
             'title' => 'Lorem Ipsum',
             'adresse' => 'Lieu1',
             'description' => 'Description1',
@@ -52,7 +51,10 @@ class EventControllerTest extends WebTestCase
             'heure_fin' => '16:30:00',
             'type_activite' => 'basket',
             'nb_participant_max' => 30,
-        ]);
+        ];
+
+        $client = static::createClient();
+        $client->request('POST', '/event/add', [], [], [], json_encode($data));
 
         $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('success', $client->getResponse()->getContent());
@@ -60,8 +62,7 @@ class EventControllerTest extends WebTestCase
 
     public function testUpdate(): void
     {
-        $client = static::createClient();
-        $client->request('POST', '/event/1/update', [
+        $data = [
             'title' => 'Lorem Ipsum',
             'adresse' => 'Lieu1',
             'description' => 'Description1',
@@ -72,7 +73,10 @@ class EventControllerTest extends WebTestCase
             'heure_fin' => '16:30:00',
             'type_activite' => 'basket',
             'nb_participant_max' => 30,
-        ]);
+        ];
+
+        $client = static::createClient();
+        $client->request('POST', '/event/1/update', [], [], [], json_encode($data));
 
         $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('success', $client->getResponse()->getContent());
@@ -80,14 +84,16 @@ class EventControllerTest extends WebTestCase
 
     public function testUpdateNotAllField(): void
     {
-        $client = static::createClient();
-        $client->request('POST', '/event/1/update', [
+        $data = [
             'title' => 'Lorem Ipsum',
             'adresse' => 'Lieu1',
             'description' => 'Description1',
             'budget' => 20,
             'date_debut' => '2022-12-17',
-        ]);
+        ];
+
+        $client = static::createClient();
+        $client->request('POST', '/event/1/update', [], [], [], json_encode($data));
 
         $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('success', $client->getResponse()->getContent());
@@ -95,13 +101,15 @@ class EventControllerTest extends WebTestCase
 
     public function testUpdateNotFound(): void
     {
-        $client = static::createClient();
-        $client->request('POST', '/event/11111111111111/update', [
+        $data = [
             'title' => 'Lorem Ipsum',
             'adresse' => 'Lieu1',
             'description' => 'Description1',
             'budget' => 20,
-        ]);
+        ];
+
+        $client = static::createClient();
+        $client->request('POST', '/event/11111111111111/update', [], [], [], json_encode($data));
 
         $this->assertResponseStatusCodeSame(404);
     }
