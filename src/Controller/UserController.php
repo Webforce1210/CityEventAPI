@@ -1,5 +1,5 @@
 <?php
-
+// composer req symfony-bundles/json-request-bundle
 namespace App\Controller;
 
 use App\Entity\User;
