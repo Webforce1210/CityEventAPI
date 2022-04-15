@@ -58,15 +58,16 @@ class EventRepository extends ServiceEntityRepository
         ;
     }
 
-    /*
-    public function findOneBySomeField($value): ?Event
+    public function findOneById(int $id): ?Event
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
+            ->leftJoin('e.userEvents', 'ue')->addSelect('ue')
+            ->leftJoin('ue.user', 'u')->addSelect('u')
+            ->leftJoin('e.messageActivites', 'ma')->addSelect('ma')
+            ->andWhere('e.id = :id')
+            ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }
