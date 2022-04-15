@@ -28,7 +28,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/{id}", name="app_user_show", methods={"GET"})
+     * @Route("/user-{id}", name="app_user_show", methods={"GET"})
      */
     public function showUser(int $id): Response{
         return $this->json(['user'=> $this->userRepository->find($id)->jsonSerialize(),]);
@@ -46,11 +46,12 @@ class UserController extends AbstractController
 
             return $this->json([
                 'status' => 'success',
-                'id' => $user->getId()
+                'id' => $user->getId(),
+                'data:'=>$data
             ]);
         } catch (\Exception $th) {
             return $this->json([
-                'stautus' => 'error',
+                'status' => 'error',
                 'message' => $th->getMessage()
             ]);
         }
@@ -129,7 +130,7 @@ class UserController extends AbstractController
     private function hydrateUser(User $user, array $data): User
     {
         $user
-            ->setPseudo($data['pseudo '])
+            ->setPseudo($data['pseudo'])
             ->setName($data['name'])
             ->setAvatar($data['avatar'])
             ->setEmail($data['email'])
