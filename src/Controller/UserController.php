@@ -37,6 +37,13 @@ class UserController extends AbstractController
             );
         }
 
-        return $this->json($user->jsonSerialize());
+        $data = $user->jsonSerialize();
+        $data->userEvents = $data->userEvents->toArray();
+        foreach ($data->userEvents as &$userEvent) {
+            $userEvent = $userEvent->jsonSerialize();
+            $userEvent->event = $userEvent->event->jsonSerialize();
+        }
+
+        return $this->json($data);
     }
 }
