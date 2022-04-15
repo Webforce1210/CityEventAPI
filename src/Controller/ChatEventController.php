@@ -38,10 +38,10 @@ class ChatEventController extends AbstractController
         }
 
         try {
-            $message = $request->request->get('message');
+            $data = json_decode($request->getContent(), true);
             $message = (new MessageActivite())
                 ->setDate(new DateTime())
-                ->setMessage($message)
+                ->setMessage($data['message'])
                 ->setUser($user)
                 ->setEvent($event)
             ;
