@@ -11,7 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Discussion
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy:"SEQUENCE")]
+    #[ORM\SequenceGenerator(sequenceName:"id", initialValue:250000)]
     #[ORM\Column(type: 'integer')]
     private $id;
 
