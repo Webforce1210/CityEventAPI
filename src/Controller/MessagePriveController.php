@@ -45,7 +45,8 @@ class MessagePriveController extends AbstractController
 
             return $this->json([
                 'status'=>'success',
-                'id'=>$messagePrive->getId(),
+                'id'=>$messagePrive->getId()
+                
             ]);
         }catch(\Exception $th){
             return $this->json([
@@ -77,7 +78,7 @@ class MessagePriveController extends AbstractController
 
             return $this->json([
                 'status'=>'success',
-                'id'=>$messagePrive->getId(),
+                'id'=>$messagePrive->getId()
             ]);
         }catch(\Exception $th){
             return $this->json([
@@ -115,8 +116,9 @@ class MessagePriveController extends AbstractController
         }
 
         return $data;
+
     }
-    private function hydrate(MessagePrive $messagePrive,array $data):MessagePrive{
+    private function hydrate(MessagePrive $messagePrive, array $data):MessagePrive{
         $messagePrive
             ->setMessage($data['message'])
             ->setdate(new \DateTime($data['date']));

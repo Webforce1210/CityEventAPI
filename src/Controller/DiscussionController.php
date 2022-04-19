@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Discussion;
 use App\Repository\DiscussionRepository;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +14,6 @@ class DiscussionController extends AbstractController
 {
     public function __construct(private DiscussionRepository $discussionRepository)
     {
-        
     }
 
         /**
@@ -46,7 +46,7 @@ class DiscussionController extends AbstractController
 
             return $this->json([
                 'status'=>'success',
-                'id'=>$discussion->getId(),
+                'id'=>$discussion->getId()
             ]);
         }catch(\Exception $th){
             return $this->json([
@@ -119,10 +119,7 @@ class DiscussionController extends AbstractController
     }
 
     private function hydrate(Discussion $discussion,array $data):Discussion{
-        $discussion
-            ->setNameDiscussion($data['name_discussion'])
-            ->setAvatar($data['avatar'])
-            ->setLastMessage($data['last_message']);
+        $discussion->setNameDiscussion($data['name_discussion']);
             return $discussion;
     }
 }
