@@ -16,7 +16,7 @@ class CreditCardInfo
     #[ORM\Column(type: 'string', length: 255)]
     private $num_carte;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'string', length: 7)]
     private $date_expi;
 
     #[ORM\Column(type: 'integer')]
@@ -91,5 +91,10 @@ class CreditCardInfo
         $this->user = $user;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return (object) get_object_vars($this);
     }
 }

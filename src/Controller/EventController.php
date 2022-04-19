@@ -38,7 +38,7 @@ class EventController extends AbstractController
     public function show(int $id): Response
     {
         return $this->json([
-            'event' => $this->eventRepository->find($id)->jsonSerialize()
+            'event' => $this->eventRepository->find($id)->jsonSerialize(),
         ]);
     }
 
