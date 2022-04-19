@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Discussion;
 use App\Repository\DiscussionRepository;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +14,6 @@ class DiscussionController extends AbstractController
 {
     public function __construct(private DiscussionRepository $discussionRepository)
     {
-        
     }
 
         /**
@@ -26,7 +26,7 @@ class DiscussionController extends AbstractController
     }
 
         /**
-     * @Route("/discussion/{id}", name="app_discussion_show", methods={"GET"})
+     * @Route("/discussion-{id}", name="app_discussion_show", methods={"GET"})
      */
     public function show(int $id):Response{
         return $this->json([
@@ -38,22 +38,25 @@ class DiscussionController extends AbstractController
         /**
      * @Route("/discussion/add", name="app_discussion_add", methods={"POST"})
      */
-    public function add(Request $request):Response{
-        try{
-            $data=$request->$request->all();
+    public function addDiscussion(Request $request):Response{
+       // try{
+            $data = $request->request->all();
+            
             $discussion = $this->hydrate(new Discussion(),$data);
             $this->discussionRepository->add($discussion);
 
             return $this->json([
                 'status'=>'success',
-                'id'=>$discussion->getId(),
+                'id'=>$discussion->getId()
             ]);
-        }catch(\Exception $th){
-            return $this->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
-            ]);
-        }
+       // }catch(\Exception $th){
+            
+          //  return $this->json([
+            //    'status'=>'error',
+              //  'message'=>$th->getMessage(),
+                //'data'=> $data
+            //],500);
+       // }
     }
 
         /**
@@ -119,10 +122,7 @@ class DiscussionController extends AbstractController
     }
 
     private function hydrate(Discussion $discussion,array $data):Discussion{
-        $discussion
-            ->setNameDiscussion($data['name_discussion'])
-            ->setAvatar($data['avatar'])
-            ->setLastMessage($data['last_message']);
+        $discussion->setNameDiscussion($data['name_discussion']);
             return $discussion;
     }
 }

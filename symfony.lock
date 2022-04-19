@@ -80,6 +80,18 @@
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
+    "nelmio/cors-bundle": {
+        "version": "2.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
+        },
+        "files": [
+            "./config/packages/nelmio_cors.yaml"
+        ]
+    },
     "nikic/php-parser": {
         "version": "v4.13.2"
     },
@@ -94,6 +106,9 @@
     },
     "psr/log": {
         "version": "3.0.0"
+    },
+    "symfony-bundles/json-request-bundle": {
+        "version": "4.1.1"
     },
     "symfony/cache": {
         "version": "v6.0.6"
@@ -188,9 +203,6 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
-    },
-    "symfony/orm-pack": {
-        "version": "v2.2.0"
     },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.25.0"

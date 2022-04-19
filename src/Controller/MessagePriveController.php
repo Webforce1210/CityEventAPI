@@ -25,23 +25,36 @@ class MessagePriveController extends AbstractController
     }
 
         /**
-     * @Route("/messagepv/{id}", name="app_messageprive_show", methods={"POST"})
+     * @Route("/messagepv/{id}", name="app_messageprive_show", methods={"GET"})
+     */
+    public function show(int $id):Response{
+        return $this->json([
+            'discussion'=>$this->messagePriveRepository->find($id)->jsonSerialize()
+        ]);
+    }
+
+        /**
+     * @Route("/messagepv/add", name="app_messageprive_add", methods={"POST"})
      */
     public function add(Request $request):Response{
         try{
-            $data=$request->$request->all();
+            // $firstREquest = $request->request;
+            $data=$request->request->all();
             $messagePrive=$this->hydrate(new MessagePrive(),$data);
             $this->messagePriveRepository->add($messagePrive);
 
             return $this->json([
                 'status'=>'success',
-                'id'=>$messagePrive->getId(),
+                'id'=>$messagePrive->getId()
+                
             ]);
         }catch(\Exception $th){
             return $this->json([
                 'status'=>'error',
                 'message'=>$th->getMessage(),
-            ]);
+                'data ::'=> $data,
+                // 'request'=>$firstREquest
+            ],500);
         }
     }
 
@@ -67,7 +80,7 @@ class MessagePriveController extends AbstractController
 
             return $this->json([
                 'status'=>'success',
-                'id'=>$messagePrive->getId(),
+                'id'=>$messagePrive->getId()
             ]);
         }catch(\Exception $th){
             return $this->json([
@@ -105,11 +118,14 @@ class MessagePriveController extends AbstractController
         }
 
         return $data;
+
     }
-    private function hydrate(MessagePrive $messagePrive,array $data):MessagePrive{
+    private function hydrate(MessagePrive $messagePrive, array $data):MessagePrive{
         $messagePrive
+        
             ->setMessage($data['message'])
-            ->setdate($data['date']);
-            return $messagePrive;
+            ->setDate($data['date']);
+
+        return $messagePrive;
     }
 }
