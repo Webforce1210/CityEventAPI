@@ -35,6 +35,16 @@ class EventController extends AbstractController
     }
 
     /**
+     * @Route("/event/filter", name="app_event_filter", methods={"POST"})
+     */
+    public function filter(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        return $this->json($this->serialize($this->eventRepository->filter($data)));
+    }
+
+    /**
      * @Route("/event/{id}", name="app_event_show", methods={"GET"})
      */
     public function show(int $id): Response

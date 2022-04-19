@@ -70,4 +70,32 @@ class EventRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    /**
+     * @return Event[]
+     */
+    public function filter(array $data): array
+    {
+        $builder = $this->createQueryBuilder('e');
+
+        if (isset($data['adresse'])) {
+            $builder
+                ->andWhere('e.adresse LIKE :adresse')
+                ->setParameter('adresse', '%'.$data['adresse'].'%')
+            ;
+        }
+
+        if (isset($data['hobbies'])) {
+            $builder
+                ->andWhere('e.type_activite LIKE :hobbies')
+                ->setParameter('hobbies', '%'.$data['hobbies'].'%')
+            ;
+        }
+
+        return $builder
+            ->orderBy('e.date_fin', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

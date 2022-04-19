@@ -60,6 +60,18 @@ class EventControllerTest extends WebTestCase
         $this->assertStringContainsString('success', $client->getResponse()->getContent());
     }
 
+    public function testFilter(): void
+    {
+        $data = [
+            'adresse' => 'Lieu1',
+            'hobbies' => 'cinema',
+        ];
+
+        $client = static::createClient();
+        $client->request('POST', '/event/filter', [], [], [], json_encode($data));
+        $this->assertResponseIsSuccessful();
+    }
+
     public function testUpdate(): void
     {
         $data = [
