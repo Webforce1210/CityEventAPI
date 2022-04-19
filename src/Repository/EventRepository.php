@@ -78,14 +78,14 @@ class EventRepository extends ServiceEntityRepository
     {
         $builder = $this->createQueryBuilder('e');
 
-        if (isset($data['adresse'])) {
+        if (isset($data['adresse']) && 'tous' !== $data['adresse']) {
             $builder
                 ->andWhere('e.adresse LIKE :adresse')
                 ->setParameter('adresse', '%'.$data['adresse'].'%')
             ;
         }
 
-        if (isset($data['hobbies'])) {
+        if (isset($data['hobbies']) && 'tous' !== $data['hobbies']) {
             $builder
                 ->andWhere('e.type_activite LIKE :hobbies')
                 ->setParameter('hobbies', '%'.$data['hobbies'].'%')
