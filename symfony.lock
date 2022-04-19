@@ -159,6 +159,7 @@
     },
     "symfony-bundles/json-request-bundle": {
         "version": "4.1.1"
+    },  
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },
