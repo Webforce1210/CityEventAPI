@@ -119,7 +119,7 @@ class MessagePriveController extends AbstractController
     private function hydrate(MessagePrive $messagePrive,array $data):MessagePrive{
         $messagePrive
             ->setMessage($data['message'])
-            ->setdate($data['date']);
+            ->setdate(new \DateTime($data['date']));
             return $messagePrive;
     }
 }
