@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Repository\EventRepository;
+use App\Service\Hydrator;
+use App\Service\JsonHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,13 +35,45 @@ class EventController extends AbstractController
     }
 
     /**
+     * @Route("/event/filter", name="app_event_filter", methods={"POST"})
+     */
+    public function filter(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        return $this->json($this->serialize($this->eventRepository->filter($data)));
+    }
+
+    /**
      * @Route("/event/{id}", name="app_event_show", methods={"GET"})
      */
     public function show(int $id): Response
     {
-        return $this->json([
-            'event' => $this->eventRepository->find($id)->jsonSerialize(),
-        ]);
+        $event = $this->eventRepository->findOneById($id);
+
+        if (null === $event) {
+            return $this->json([
+                'status' => 'error',
+                'message' => 'Event not found',
+            ], 404);
+        }
+
+        $data = $event->jsonSerialize();
+        $data->userEvents = $data->userEvents->toArray();
+        $data->messageActivites = $data->messageActivites->toArray();
+
+        foreach ($data->userEvents as &$userEvent) {
+            $userEvent = $userEvent->jsonSerialize();
+            $userEvent->event = $userEvent->event->jsonSerialize();
+            $userEvent->user = $userEvent->user->jsonSerialize();
+        }
+
+        foreach ($data->messageActivites as &$message) {
+            $message = $message->jsonSerialize();
+            $message->user = $message->user->jsonSerialize();
+        }
+
+        return $this->json($data);
     }
 
     /**
@@ -48,7 +82,7 @@ class EventController extends AbstractController
     public function add(Request $request): Response
     {
         try {
-            $data = $request->request->all();
+            $data = json_decode($request->getContent(), true);
             $event = $this->hydrate(new Event(), $data);
             $this->eventRepository->add($event);
 
@@ -79,7 +113,7 @@ class EventController extends AbstractController
         }
 
         try {
-            $data = $request->request->all();
+            $data = json_decode($request->getContent(), true);
             $event = $this->hydrate($event, $data);
             $this->eventRepository->add($event);
 
@@ -118,29 +152,11 @@ class EventController extends AbstractController
 
     private function serialize(array $events): array
     {
-        $data = [];
-        foreach ($events as $event) {
-            $data[] = $event->jsonSerialize();
-        }
-
-        return $data;
+        return JsonHelper::serialize($events);
     }
 
     private function hydrate(Event $event, array $data): Event
     {
-        $event
-            ->setTitle($data['title'])
-            ->setAdresse($data['adresse'])
-            ->setBudget($data['budget'])
-            ->setDateDebut($data['date_debut'])
-            ->setDateFin($data['date_fin'])
-            ->setHeureDebut($data['heure_debut'])
-            ->setHeureFin($data['heure_fin'])
-            ->setTypeActivite($data['type_activite'])
-            ->setNbParticipantMax($data['nb_participant_max'])
-            ->setDescription($data['description'])
-        ;
-
-        return $event;
+        return Hydrator::hydrate($data, $event);
     }
 }
