@@ -58,15 +58,44 @@ class EventRepository extends ServiceEntityRepository
         ;
     }
 
-    /*
-    public function findOneBySomeField($value): ?Event
+    public function findOneById(int $id): ?Event
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
+            ->leftJoin('e.userEvents', 'ue')->addSelect('ue')
+            ->leftJoin('ue.user', 'u')->addSelect('u')
+            ->leftJoin('e.messageActivites', 'ma')->addSelect('ma')
+            ->andWhere('e.id = :id')
+            ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
+    /**
+     * @return Event[]
+     */
+    public function filter(array $data): array
+    {
+        $builder = $this->createQueryBuilder('e');
+
+        if (isset($data['adresse'])) {
+            $builder
+                ->andWhere('e.adresse LIKE :adresse')
+                ->setParameter('adresse', '%'.$data['adresse'].'%')
+            ;
+        }
+
+        if (isset($data['hobbies'])) {
+            $builder
+                ->andWhere('e.type_activite LIKE :hobbies')
+                ->setParameter('hobbies', '%'.$data['hobbies'].'%')
+            ;
+        }
+
+        return $builder
+            ->orderBy('e.date_fin', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
