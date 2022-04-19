@@ -25,12 +25,13 @@ class MessagePriveController extends AbstractController
     }
 
         /**
-     * @Route("/messagepv/{id}", name="app_messageprive_show", methods={"GET"})
+     * @Route("/messagepv-{id}", name="app_messageprive_show", methods={"GET"})
      */
-    public function show(int $id):Response{
+    public function  show(int $id):Response{
         return $this->json([
-            'discussion'=>$this->messagePriveRepository->find($id)->jsonSerialize()
+            'messagepv'=>$this->messagePriveRepository->find($id)->jsonSerialize()
         ]);
+        
     }
 
         /**
@@ -38,7 +39,6 @@ class MessagePriveController extends AbstractController
      */
     public function add(Request $request):Response{
         try{
-            // $firstREquest = $request->request;
             $data=$request->request->all();
             $messagePrive=$this->hydrate(new MessagePrive(),$data);
             $this->messagePriveRepository->add($messagePrive);
@@ -52,8 +52,6 @@ class MessagePriveController extends AbstractController
             return $this->json([
                 'status'=>'error',
                 'message'=>$th->getMessage(),
-                'data ::'=> $data,
-                // 'request'=>$firstREquest
             ],500);
         }
     }
@@ -122,10 +120,8 @@ class MessagePriveController extends AbstractController
     }
     private function hydrate(MessagePrive $messagePrive, array $data):MessagePrive{
         $messagePrive
-        
             ->setMessage($data['message'])
-            ->setDate($data['date']);
-
-        return $messagePrive;
+            ->setdate(new \DateTime($data['date']));
+            return $messagePrive;
     }
 }

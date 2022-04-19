@@ -38,10 +38,9 @@ class DiscussionController extends AbstractController
         /**
      * @Route("/discussion/add", name="app_discussion_add", methods={"POST"})
      */
-    public function addDiscussion(Request $request):Response{
-       // try{
-            $data = $request->request->all();
-            
+    public function add(Request $request):Response{
+        try{
+            $data=$request->request->all();
             $discussion = $this->hydrate(new Discussion(),$data);
             $this->discussionRepository->add($discussion);
 
@@ -49,14 +48,12 @@ class DiscussionController extends AbstractController
                 'status'=>'success',
                 'id'=>$discussion->getId()
             ]);
-       // }catch(\Exception $th){
-            
-          //  return $this->json([
-            //    'status'=>'error',
-              //  'message'=>$th->getMessage(),
-                //'data'=> $data
-            //],500);
-       // }
+        }catch(\Exception $th){
+            return $this->json([
+                'status'=>'error',
+                'message'=>$th->getMessage(),
+            ],500);
+        }
     }
 
         /**

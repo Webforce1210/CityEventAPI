@@ -49,31 +49,9 @@ class EventController extends AbstractController
      */
     public function show(int $id): Response
     {
-        $event = $this->eventRepository->findOneById($id);
-
-        if (null === $event) {
-            return $this->json([
-                'status' => 'error',
-                'message' => 'Event not found',
-            ], 404);
-        }
-
-        $data = $event->jsonSerialize();
-        $data->userEvents = $data->userEvents->toArray();
-        $data->messageActivites = $data->messageActivites->toArray();
-
-        foreach ($data->userEvents as &$userEvent) {
-            $userEvent = $userEvent->jsonSerialize();
-            $userEvent->event = $userEvent->event->jsonSerialize();
-            $userEvent->user = $userEvent->user->jsonSerialize();
-        }
-
-        foreach ($data->messageActivites as &$message) {
-            $message = $message->jsonSerialize();
-            $message->user = $message->user->jsonSerialize();
-        }
-
-        return $this->json($data);
+        return $this->json([
+            'event' => $this->eventRepository->find($id)->jsonSerialize(),
+        ]);
     }
 
     /**
